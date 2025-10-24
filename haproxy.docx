@@ -1,0 +1,26 @@
+global
+    log /dev/log    local0
+    log /dev/log    local1 notice
+    daemon
+    maxconn 256
+
+defaults
+    log     global
+    mode    tcp
+    option  dontlognull
+    timeout connect 5s
+    timeout client  30s
+    timeout server  30s
+
+frontend http_front
+    bind *:8080
+    mode tcp
+    default_backend http_back
+
+backend http_back
+    mode tcp
+    balance roundrobin
+    option tcp-check
+    server web1 84.252.133.46:8001 check
+    server web2 158.160.182.246:8002 check
+
